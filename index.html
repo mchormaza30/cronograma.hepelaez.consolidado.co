@@ -1,467 +1,153 @@
-<h2 class="sr-only">Tablero consolidado semanal de campaña Yo Estoy Con Vos — carga archivos Excel de cada eje para ver el avance unificado</h2>
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<!-- skill:chrome -->
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.topbar{background:#1A1A2E;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.topbar-left h1{font-size:14px;font-weight:500;color:#fff;letter-spacing:.03em}
-.topbar-left p{font-size:11px;color:#9CA3AF;margin-top:2px}
-.semana-pill{background:#2d2d4e;color:#A5A8D8;font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid #3d3d6e;white-space:nowrap}
-.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
-.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem}
-.metric-label{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.metric-val{font-size:22px;font-weight:500;color:var(--color-text-primary);line-height:1}
-.metric-sub{font-size:11px;color:var(--color-text-secondary);margin-top:4px}
-.section-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.upload-zone{border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:1.5rem;text-align:center;cursor:pointer;transition:background .15s;margin-bottom:1rem}
-.upload-zone:hover{background:var(--color-background-secondary)}
-.upload-zone i{font-size:28px;color:var(--color-text-secondary);display:block;margin-bottom:8px}
-.upload-zone p{font-size:13px;color:var(--color-text-secondary)}
-.upload-zone span{font-size:11px;color:var(--color-text-tertiary)}
-.file-input{display:none}
-.ejes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
-.eje-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem;border-left:3px solid transparent}
-.eje-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.eje-name{font-size:11px;font-weight:500;color:var(--color-text-primary)}
-.eje-pct{font-size:13px;font-weight:500}
-.eje-bar-bg{height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
-.eje-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
-.eje-counts{display:flex;gap:8px;margin-top:5px}
-.eje-count{font-size:10px;color:var(--color-text-secondary)}
-.eje-count span{font-weight:500;color:var(--color-text-primary)}
-.chart-wrap{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:1rem}
-.chart-title{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
-.bar-chart{display:flex;flex-direction:column;gap:8px}
-.bar-row{display:flex;align-items:center;gap:8px}
-.bar-label{font-size:10px;color:var(--color-text-secondary);width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bar-track{flex:1;height:18px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:3px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
-.bar-fill span{font-size:9px;font-weight:500;color:#fff}
-.status-legend{display:flex;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.actividades-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
-.actividades-table th{background:var(--color-background-secondary);font-weight:500;color:var(--color-text-secondary);padding:6px 8px;text-align:left;border-bottom:0.5px solid var(--color-border-tertiary)}
-.actividades-table td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.actividades-table tr:last-child td{border-bottom:none}
-.status-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:500}
-.tag-pendiente{background:#FAEEDA;color:#854F0B}
-.tag-proceso{background:#B5D4F4;color:#185FA5}
-.tag-completado{background:#C0DD97;color:#27500A}
-.tag-cancelado{background:#F7C1C1;color:#791F1F}
-.empty-state{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:13px}
-.empty-state i{font-size:32px;display:block;margin-bottom:.5rem;color:var(--color-text-tertiary)}
-.add-manual-btn{width:100%;margin-top:.5rem;font-size:12px;padding:8px}
-.semana-nav{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
-.semana-nav button{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px;cursor:pointer;font-size:12px;color:var(--color-text-primary)}
-.semana-nav span{font-size:13px;font-weight:500;color:var(--color-text-primary);flex:1;text-align:center}
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
 </style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
 
-<div style="padding:1rem 0">
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
 
-<div class="topbar">
-  <div class="topbar-left">
-    <h1>Tablero de campaña · Yo Estoy Con Vos</h1>
-    <p id="fecha-actual">Cargando fecha...</p>
-  </div>
-  <div class="semana-pill" id="semana-label">Semana —</div>
-</div>
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
 
-<div class="metrics-row">
-  <div class="metric">
-    <div class="metric-label">Ejes cargados</div>
-    <div class="metric-val" id="m-ejes">0 / 10</div>
-    <div class="metric-sub">archivos subidos</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">Total actividades</div>
-    <div class="metric-val" id="m-total">0</div>
-    <div class="metric-sub">en todos los ejes</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">Completadas</div>
-    <div class="metric-val" id="m-comp">0</div>
-    <div class="metric-sub" id="m-comp-pct">— % del total</div>
-  </div>
-  <div class="metric">
-    <div class="metric-label">Avance general</div>
-    <div class="metric-val" id="m-avance">0%</div>
-    <div class="metric-sub" id="m-alerta">Sin datos aún</div>
-  </div>
-</div>
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
 
-<div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-  <i class="ti ti-upload" aria-hidden="true"></i>
-  <p>Subir archivos Excel de los coordinadores</p>
-  <span>Podés subir varios a la vez · .xlsx · El sistema detecta el eje automáticamente</span>
-</div>
-<input type="file" id="file-input" class="file-input" multiple accept=".xlsx,.xls" />
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
 
-<div class="status-legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#3B6D11"></div>Completado</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div>En proceso</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#854F0B"></div>Pendiente</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#A32D2D"></div>Cancelado</div>
-</div>
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 
-<p class="section-title">Avance por eje</p>
-<div class="ejes-grid" id="ejes-grid">
-  <div class="empty-state" style="grid-column:1/-1">
-    <i class="ti ti-chart-bar" aria-hidden="true"></i>
-    Subí los archivos de los coordinadores para ver el avance por eje
-  </div>
-</div>
-
-<div class="chart-wrap">
-  <div class="chart-title">Actividades por eje — estado actual</div>
-  <div class="bar-chart" id="bar-chart">
-    <div class="empty-state"><i class="ti ti-upload" aria-hidden="true"></i>Sin datos cargados</div>
-  </div>
-</div>
-
-<p class="section-title">Actividades de esta semana</p>
-<div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:1rem">
-  <table class="actividades-table">
-    <thead>
-      <tr>
-        <th style="width:22%">Eje</th>
-        <th style="width:30%">Actividad</th>
-        <th style="width:14%">Vence</th>
-        <th style="width:18%">Responsable</th>
-        <th style="width:16%">Estado</th>
-      </tr>
-    </thead>
-    <tbody id="act-tbody">
-      <tr><td colspan="5" class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar" aria-hidden="true"></i>Sin actividades esta semana</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<button class="add-manual-btn" onclick="sendPrompt('Quiero ingresar datos de un eje manualmente sin subir Excel. ¿Cómo lo hago?')">
-  <i class="ti ti-edit" aria-hidden="true"></i> Ingresar datos manualmente ↗
-</button>
-
-</div>
-
+</script>
+<!-- /skill:chrome -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tablero consolidado · Henry Peláez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--font:Inter,system-ui,sans-serif;--bg:oklch(11% .018 260);--surface:oklch(16% .02 260);--raised:oklch(21% .022 260);--border:oklch(29% .018 260);--text:oklch(96% .006 260);--muted:oklch(72% .01 260);--dim:oklch(54% .01 260);--accent:oklch(60% .18 260);--ok:oklch(72% .16 150);--info:oklch(70% .16 230);--warn:oklch(75% .17 70);--danger:oklch(65% .15 20);--shadow:0 12px 32px oklch(0% 0 0/.28)}
+[data-theme=light]{--bg:oklch(96% .008 260);--surface:oklch(100% .003 260);--raised:oklch(94% .01 260);--border:oklch(87% .012 260);--text:oklch(16% .015 260);--muted:oklch(42% .012 260);--dim:oklch(58% .01 260);--shadow:0 10px 28px oklch(20% .01 260/.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:18px;line-height:1.5;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:1640px;margin:auto;padding:32px 48px 80px}header{display:flex;justify-content:space-between;align-items:end;gap:24px;padding-bottom:28px;border-bottom:2px solid var(--border);margin-bottom:32px;flex-wrap:wrap}h1{margin:0;font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.1;letter-spacing:-.04em}h1 small{display:block;margin-top:8px;font-size:.9rem;color:var(--muted);font-weight:500;letter-spacing:0}.head-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.date{color:var(--muted);font-size:.78rem;text-align:right}.date strong{display:block;color:var(--text);font-size:1rem}.btn{min-height:44px;border:2px solid var(--border);border-radius:999px;padding:9px 18px;background:var(--surface);color:var(--text);font-weight:700;font-size:.76rem;transition:transform .15s,background .15s}.btn:hover{transform:translateY(-1px);background:var(--raised)}.btn.primary{background:var(--accent);border-color:var(--accent);color:oklch(98% .005 260)}.btn.danger{background:var(--danger);border-color:var(--danger);color:oklch(98% .005 20)}.status{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;color:var(--muted)}.status i{width:9px;height:9px;border-radius:50%;background:var(--warn)}.status.ok i{background:var(--ok)}.status.err i{background:var(--danger)}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:40px}.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow)}.stat label{display:block;color:var(--dim);font-size:.64rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}.stat b{font-size:2.35rem;line-height:1;font-variant-numeric:tabular-nums}.stat span{display:block;color:var(--dim);font-size:.7rem;margin-top:8px}
+.section{margin:34px 0 14px;color:var(--dim);font-size:.7rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.ejes{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-bottom:42px}.eje{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}.eje-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.eje-name{font-size:.88rem;font-weight:800;display:flex;align-items:center;gap:9px}.dot{width:11px;height:11px;border-radius:50%}.pct{font-weight:900;font-size:1.35rem}.bar{height:8px;background:var(--raised);border-radius:8px;overflow:hidden;margin:14px 0 10px}.fill{height:100%;border-radius:8px}.eje-meta{font-size:.68rem;color:var(--dim);display:flex;gap:13px;flex-wrap:wrap}.eje-meta strong{color:var(--muted)}
+.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.filters{display:flex;gap:8px;flex-wrap:wrap}.chip{border:2px solid var(--border);background:transparent;color:var(--muted);border-radius:999px;padding:8px 15px;font-size:.7rem;font-weight:700}.chip.active{background:var(--text);border-color:var(--text);color:var(--bg)}.dates{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.dates label{font-size:.65rem;color:var(--dim);font-weight:700}.dates input,.search{background:var(--surface);border:2px solid var(--border);border-radius:10px;color:var(--text);padding:8px 11px;font-size:.7rem}.search{min-width:220px}.upload{background:var(--surface);border:2px dashed var(--border);border-radius:16px;text-align:center;padding:22px;margin:28px 0 34px;color:var(--muted);transition:background .15s,border-color .15s}.upload:hover{background:var(--raised);border-color:var(--accent)}.upload b{display:block;font-size:.85rem;color:var(--text)}.upload span{font-size:.68rem;color:var(--dim)}#file{display:none}
+.table-wrap{overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}table{width:100%;min-width:1050px;border-collapse:collapse;font-size:.75rem}th{background:var(--raised);padding:14px 16px;text-align:left;color:var(--muted);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid var(--border)}td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle}tr:last-child td{border-bottom:0}tr:hover td{background:var(--raised)}.activity{font-weight:700;white-space:normal;min-width:250px}.obs{white-space:normal;color:var(--muted);min-width:190px}.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px;font-size:.63rem;font-weight:800;white-space:nowrap}.tag:before{content:"";width:7px;height:7px;border-radius:50%}.done{background:oklch(23% .04 150);color:var(--ok)}.done:before{background:var(--ok)}.progress{background:oklch(23% .04 230);color:var(--info)}.progress:before{background:var(--info)}.pending{background:oklch(24% .04 70);color:var(--warn)}.pending:before{background:var(--warn)}.cancel{background:oklch(24% .04 20);color:var(--danger)}.cancel:before{background:var(--danger)}.row-actions{display:flex;gap:6px}.row-actions button{border:1px solid var(--border);border-radius:8px;padding:6px 9px;background:transparent;color:var(--muted);font-size:.62rem;font-weight:800}.row-actions button:hover{background:var(--raised);color:var(--text)}
+#editor{display:none;position:fixed;inset:0;z-index:10;background:oklch(0% 0 0/.65);align-items:center;justify-content:center;padding:20px}#editor.open{display:flex}.dialog{width:min(650px,100%);max-height:92vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 20px 80px oklch(0% 0 0/.45)}.dialog h2{margin:0 0 22px;font-size:1.3rem}.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);font-weight:800}.field input,.field select,.field textarea{width:100%;background:var(--raised);color:var(--text);border:2px solid var(--border);border-radius:10px;padding:11px 13px;font-size:.8rem}.field textarea{min-height:90px;resize:vertical}.field :focus{outline:2px solid var(--accent);outline-offset:2px}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.empty{text-align:center;padding:42px;color:var(--dim)}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){body{font-size:16px}.app{padding:20px 14px 60px}.stats{grid-template-columns:repeat(2,1fr)}.stat{padding:16px}.stat b{font-size:1.9rem}.head-actions{align-items:flex-start}.date{text-align:left}.form{grid-template-columns:1fr}.field.full{grid-column:auto}.search{min-width:160px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div><h1>Campaña Henry Peláez<small>Tablero consolidado · Yo Estoy Con Vos</small></h1></div><div class="head-actions"><div class="date"><span id="today"></span><strong id="week"></strong></div><span class="status" id="connection"><i></i><span>Conectando...</span></span><button class="btn" id="theme">Cambiar fondo</button><button class="btn primary" id="add">+ Agregar actividad</button></div></header>
+<section class="stats" id="stats"></section>
+<div class="section">Avance por eje</div><section class="ejes" id="ejes"></section>
+<div class="upload" id="drop"><b>Subir Excel actualizado</b><span>Arrastra aquí o haz clic. Lee las pestañas del archivo y sincroniza los ejes con Firebase.</span><input id="file" type="file" accept=".xlsx,.xls" multiple></div>
+<div class="section">Actividades registradas</div>
+<div class="toolbar"><div class="filters" id="filters"></div><div class="dates"><input class="search" id="search" placeholder="Buscar actividad..."/><label>Desde</label><input id="from" type="date"/><label>Hasta</label><input id="to" type="date"/><button class="chip" id="clear">Limpiar</button></div></div>
+<div class="table-wrap"><table><thead><tr><th>Eje</th><th>Actividad</th><th>Fecha fin</th><th>Responsable</th><th>Estado</th><th>Observaciones</th><th>Acciones</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<div id="editor"><section class="dialog" role="dialog" aria-modal="true"><h2 id="editorTitle">Agregar actividad</h2><div class="form"><div class="field"><label>Eje</label><select id="fEje"></select></div><div class="field"><label>Estado</label><select id="fEstado"><option value="pendiente">Pendiente</option><option value="proceso">En proceso</option><option value="completado">Completado</option><option value="cancelado">Cancelado</option></select></div><div class="field full"><label>Actividad / acción</label><input id="fNombre" required></div><div class="field"><label>Fecha fin</label><input id="fFecha" type="date"></div><div class="field"><label>Responsable</label><input id="fResp"></div><div class="field full"><label>Observaciones</label><textarea id="fObs"></textarea></div></div><div class="dialog-actions"><button class="btn" id="cancel">Cancelar</button><button class="btn primary" id="save">Guardar</button></div></section></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-
 <script>
-  firebase.initializeApp({
-  apiKey: "AIzaSyBm2oYfKXhhI77DxWliPo45Aq1aaA1oqGM",
-  authDomain: "cronograma-hepelaez1.firebaseapp.com",
-  databaseURL: "https://cronograma-hepelaez1-default-rtdb.firebaseio.com",
-  projectId: "cronograma-hepelaez1",
-  storageBucket: "cronograma-hepelaez1.firebasestorage.app",
-  messagingSenderId: "173712156131",
-  appId: "1:173712156131:web:bbba6c5240084782516cd6"
-});
-const db = firebase.database();
-const actsRef = db.ref('actividades');
-  let firebaseReady = false;
-
-actsRef.on('value', snapshot => {
-  const data = snapshot.val();
-  if (!data) return;
-
-  state = data;
-  firebaseReady = true;
-  render();
-});
-
-function saveToFirebase() {
-  if (!firebaseReady) return;
-  actsRef.set(state);
+/* Firebase: ya conectado al proyecto cronograma-hepelaez1 */
+const firebaseConfig={apiKey:"AIzaSyBm2oYfKXhhI77DxWliPo45Aq1aaA1oqGM",authDomain:"cronograma-hepelaez1.firebaseapp.com",databaseURL:"https://cronograma-hepelaez1-default-rtdb.firebaseio.com",projectId:"cronograma-hepelaez1",storageBucket:"cronograma-hepelaez1.firebasestorage.app",messagingSenderId:"173712156131",appId:"1:173712156131:web:bbba6c5240084782516cd6"};
+firebase.initializeApp(firebaseConfig);const db=firebase.database();const activitiesRef=db.ref("actividades");
+const EJES=[{key:"fe",label:"Fe",color:"oklch(72% .2 55)"},{key:"jovenes",label:"Jóvenes",color:"oklch(70% .2 320)"},{key:"goprende",label:"Goprende",color:"oklch(72% .18 145)"},{key:"formacion",label:"Formación",color:"oklch(70% .18 30)"},{key:"despensa",label:"Despensa",color:"oklch(72% .16 200)"},{key:"fundacion",label:"Fundación",color:"oklch(72% .2 80)"},{key:"emprend",label:"Emprendimientos",color:"oklch(70% .15 160)"},{key:"bienestar",label:"Bienestar",color:"oklch(70% .15 220)"},{key:"estrategia",label:"Estrategia Política",color:"oklch(68% .13 280)"},{key:"comun",label:"Comunicaciones",color:"oklch(75% .16 80)"}];
+const KEYWORDS={fe:["fe","feconvoz"],jovenes:["joven","juventud","juntos creamos"],goprende:["goprende"],formacion:["formacion","formación","liderazgo"],despensa:["despensa","gestiones"],fundacion:["fundacion","fundación","yoestoy"],emprend:["emprend"],bienestar:["bienestar","salud"],estrategia:["estrategia","politica","política"],comun:["comunicacion","comunicación","prensa"]};
+let activities=[];let filter="all";let editing=null;let nextId=Date.now();
+const $=id=>document.getElementById(id);const cfg=k=>EJES.find(e=>e.key===k)||{label:k,color:"var(--muted)"};
+function clean(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function status(v){const s=clean(v);return s.includes("complet")||s.includes("listo")||s.includes("done")?"completado":s.includes("proceso")||s.includes("ejecuci")||s.includes("progress")?"proceso":s.includes("cancel")?"cancelado":"pendiente"}
+function dateISO(v){if(!v)return"";if(typeof v==="number"){const d=new Date(Math.round((v-25569)*86400*1000));return d.toISOString().slice(0,10)}const s=String(v).trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);const m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);return m?`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`:""}
+function detect(name){const s=clean(name);return Object.entries(KEYWORDS).find(([,words])=>words.some(w=>s.includes(clean(w))))?.[0]||null}
+function fmtDate(s){if(!s)return"Segundo semestre 2026";const d=new Date(s+"T00:00:00");return isNaN(d.getTime())?"Segundo semestre 2026":d.toLocaleDateString("es-CO",{day:"2-digit",month:"short",year:"numeric"})}
+function week(d){const x=new Date(d.getFullYear(),0,1);return Math.ceil(((d-x)/86400000+x.getDay()+1)/7)}
+function setConnection(type,text){$("connection").className="status "+type;$("connection").lastElementChild.textContent=text}
+function writeAll(){const obj={};activities.forEach(a=>obj[a.id]=a);return activitiesRef.set(obj)}
+function writeOne(a){return activitiesRef.child(String(a.id)).set(a)}
+function removeOne(id){return activitiesRef.child(String(id)).remove()}
+function render(){const now=new Date();$("today").textContent=now.toLocaleDateString("es-CO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});$("week").textContent=`Semana ${week(now)} · 2026`;
+ const total=activities.length,done=activities.filter(a=>a.estado==="completado").length,proc=activities.filter(a=>a.estado==="proceso").length,pend=activities.filter(a=>a.estado==="pendiente").length,pct=total?Math.round(done/total*100):0;
+ $("stats").innerHTML=`<div class="stat"><label>Total actividades</label><b>${total}</b><span>${EJES.filter(e=>activities.some(a=>a.eje===e.key)).length} ejes activos</span></div><div class="stat"><label>Completadas</label><b style="color:var(--ok)">${done}</b><span>${pct}% del total</span></div><div class="stat"><label>En proceso</label><b style="color:var(--info)">${proc}</b><span>${total?Math.round(proc/total*100):0}%</span></div><div class="stat"><label>Pendientes</label><b style="color:var(--warn)">${pend}</b><span>${total?Math.round(pend/total*100):0}%</span></div><div class="stat"><label>Avance general</label><b>${pct}%</b><span>${pct>=60?"Buen ritmo":pct>=30?"Avanzando":"Requiere impulso"}</span></div>`;
+ $("ejes").innerHTML=EJES.filter(e=>activities.some(a=>a.eje===e.key)).map(e=>{const a=activities.filter(x=>x.eje===e.key),d=a.filter(x=>x.estado==="completado").length,p=a.filter(x=>x.estado==="proceso").length,n=a.filter(x=>x.estado==="pendiente").length,q=a.length?Math.round(d/a.length*100):0;return`<article class="eje"><div class="eje-top"><div class="eje-name"><i class="dot" style="background:${e.color}"></i>${e.label}</div><div class="pct" style="color:${e.color}">${q}%</div></div><div class="bar"><div class="fill" style="width:${q}%;background:${e.color}"></div></div><div class="eje-meta"><span><strong>${d}</strong> compl.</span><span><strong>${p}</strong> proceso</span><span><strong>${n}</strong> pend.</span><span><strong>${a.length}</strong> total</span></div></article>`}).join("");
+ $("filters").innerHTML=`<button class="chip ${filter==="all"?"active":""}" data-filter="all">Todos</button>`+EJES.filter(e=>activities.some(a=>a.eje===e.key)).map(e=>`<button class="chip ${filter===e.key?"active":""}" data-filter="${e.key}">${e.label}</button>`).join("");document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{filter=b.dataset.filter;render()});
+ const from=$("from").value,to=$("to").value,term=clean($("search").value);let list=filter==="all"?[...activities]:activities.filter(a=>a.eje===filter);list=list.filter(a=>(!from||a.fechaFin&&a.fechaFin>=from)&&(!to||a.fechaFin&&a.fechaFin<=to)&&(!term||clean(a.nombre+" "+a.responsable+" "+a.obs).includes(term))).sort((a,b)=>(a.fechaFin||"9999").localeCompare(b.fechaFin||"9999"));
+ $("rows").innerHTML=list.length?list.map(a=>{const e=cfg(a.eje),cl=a.estado==="completado"?"done":a.estado==="proceso"?"progress":a.estado==="cancelado"?"cancel":"pending",label=a.estado==="completado"?"Completado":a.estado==="proceso"?"En proceso":a.estado==="cancelado"?"Cancelado":"Pendiente";return`<tr><td style="color:${e.color};font-weight:800">${e.label}</td><td class="activity">${a.nombre}</td><td>${fmtDate(a.fechaFin)}</td><td>${a.responsable||""}</td><td><span class="tag ${cl}">${label}</span></td><td class="obs">${a.obs||""}</td><td><div class="row-actions"><button onclick="openEditor(${a.id})">Editar</button><button onclick="deleteActivity(${a.id})">Eliminar</button></div></td></tr>`}).join(""):"<tr><td colspan="7" class="empty">No hay actividades para este filtro.</td></tr>";
 }
-
-const EJES_CONFIG = [
-  {key:'fe',         label:'Eje de la Fe',              color:'#1A1A5E', light:'#EEEEFA'},
-  {key:'emprend',    label:'Emprendimientos',            color:'#0F6E56', light:'#E1F5EE'},
-  {key:'bienestar',  label:'Bienestar',                 color:'#185FA5', light:'#E6F1FB'},
-  {key:'jovenes',    label:'Jóvenes',                   color:'#993356', light:'#FBEAF0'},
-  {key:'goprende',   label:'Goprende',                  color:'#3B6D11', light:'#EAF3DE'},
-  {key:'formacion',  label:'Formación y Liderazgo',     color:'#993C1D', light:'#FAECE7'},
-  {key:'estrategia', label:'Estrategia Política',       color:'#1A1A2E', light:'#EEEEEE'},
-  {key:'comun',      label:'Comunicaciones',            color:'#854F0B', light:'#FAEEDA'},
-  {key:'gestiones',  label:'Gestiones',                 color:'#5F5E5A', light:'#F1EFE8'},
-  {key:'fundacion',  label:'Fundación Yo Estoy Con Vos',color:'#A32D2D', light:'#FCEBEB'},
-];
-
-const EJE_KEYWORDS = {
-  fe:['fe','faith','religion','espiritual'],
-  emprend:['emprend','empresa','negocio','startup'],
-  bienestar:['bienestar','salud','welfare'],
-  jovenes:['joven','juventud','young'],
-  goprende:['goprende','gobierno','aprende'],
-  formacion:['formacion','formación','liderazgo','capacit'],
-  estrategia:['estrategia','politica','política'],
-  comun:['comunicacion','comunicación','prensa','redes'],
-  gestiones:['gestion','gestión','tramite'],
-  fundacion:['fundacion','fundación','yoestoy'],
-};
-
-let state = {};
-EJES_CONFIG.forEach(e => {
-  state[e.key] = {label:e.label, color:e.color, light:e.light, loaded:false,
-    total:0, completado:0, proceso:0, pendiente:0, cancelado:0, actividades:[]};
-});
-
-function getWeekLabel(d) {
-  const jan1 = new Date(d.getFullYear(), 0, 1);
-  const wk = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
-  return `Semana ${wk} · ${d.getFullYear()}`;
-}
-
-function getWeekRange(d) {
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  const mon = new Date(d.setDate(diff));
-  const fri = new Date(mon); fri.setDate(mon.getDate() + 4);
-  const fmt = dt => dt.toLocaleDateString('es-CO', {day:'2-digit',month:'short'});
-  return `${fmt(mon)} — ${fmt(fri)}`;
-}
-
-function isThisWeek(dateStr) {
-  if (!dateStr) return false;
-  const d = new Date(dateStr);
-  if (isNaN(d)) return false;
-  const now = new Date();
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay() + 1);
-  startOfWeek.setHours(0,0,0,0);
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
-  return d >= startOfWeek && d <= endOfWeek;
-}
-
-function detectEje(filename, sheetNames) {
-  const str = (filename + ' ' + sheetNames.join(' ')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  for (const [key, kws] of Object.entries(EJE_KEYWORDS)) {
-    if (kws.some(k => str.includes(k))) return key;
-  }
-  return null;
-}
-
-function parseStatus(val) {
-  if (!val) return 'pendiente';
-  const v = String(val).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  if (v.includes('complet') || v.includes('listo') || v.includes('done')) return 'completado';
-  if (v.includes('proceso') || v.includes('ejecuci') || v.includes('progress')) return 'proceso';
-  if (v.includes('cancel')) return 'cancelado';
-  return 'pendiente';
-}
-
-function excelDateToStr(val) {
-  if (!val) return '';
-  if (typeof val === 'number') {
-    const d = new Date(Math.round((val - 25569) * 86400 * 1000));
-    return d.toISOString().split('T')[0];
-  }
-  return String(val);
-}
-
-function processWorkbook(wb, filename) {
-  const sheetNames = wb.SheetNames;
-  const ejKey = detectEje(filename, sheetNames);
-  
-  let targetSheet = null;
-  let ejKeyFinal = ejKey;
-  
-  if (!ejKey) {
-    targetSheet = wb.Sheets[sheetNames[0]];
-    ejKeyFinal = EJES_CONFIG.find(e => !state[e.key].loaded)?.key || sheetNames[0].substring(0,6).toLowerCase();
-  } else {
-    const sheetName = sheetNames.find(s => {
-      const sl = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      return EJE_KEYWORDS[ejKey]?.some(k => sl.includes(k));
-    }) || sheetNames[0];
-    targetSheet = wb.Sheets[sheetName];
-  }
-
-  if (!targetSheet || !ejKeyFinal || !state[ejKeyFinal]) return false;
-
-  const rows = XLSX.utils.sheet_to_json(targetSheet, {header:1, defval:''});
-  
-  const acts = [];
-  let headerRow = -1;
-  
-  for (let i = 0; i < Math.min(rows.length, 12); i++) {
-    const row = rows[i].map(c => String(c).toLowerCase());
-    if (row.some(c => c.includes('actividad') || c.includes('accion') || c.includes('acción'))) {
-      headerRow = i; break;
-    }
-  }
-
-  const dataStart = headerRow >= 0 ? headerRow + 1 : 7;
-  
-  for (let i = dataStart; i < rows.length; i++) {
-    const row = rows[i];
-    if (!row[0] && !row[1]) continue;
-    const nombre = String(row[0] || row[1] || '').trim();
-    if (!nombre || nombre.length < 2) continue;
-    const fechaRaw = row[3] || row[4] || '';
-    acts.push({
-      nombre,
-      objetivo: String(row[1] || row[2] || '').trim(),
-      fechaFin: excelDateToStr(fechaRaw),
-      responsable: String(row[4] || row[5] || '').trim(),
-      estado: parseStatus(row[6] || row[7] || ''),
-    });
-  }
-
-  if (acts.length === 0) return false;
-
-  const s = state[ejKeyFinal];
-  s.loaded = true;
-  s.actividades = acts;
-  s.total = acts.length;
-  s.completado = acts.filter(a => a.estado === 'completado').length;
-  s.proceso = acts.filter(a => a.estado === 'proceso').length;
-  s.pendiente = acts.filter(a => a.estado === 'pendiente').length;
-  s.cancelado = acts.filter(a => a.estado === 'cancelado').length;
-  saveToFirebase();
-  return true;
-}
-
-function render() {
-  const loaded = EJES_CONFIG.filter(e => state[e.key].loaded);
-  const total = loaded.reduce((s,e) => s + state[e.key].total, 0);
-  const comp  = loaded.reduce((s,e) => s + state[e.key].completado, 0);
-  const proc  = loaded.reduce((s,e) => s + state[e.key].proceso, 0);
-  const pend  = loaded.reduce((s,e) => s + state[e.key].pendiente, 0);
-  const pct   = total > 0 ? Math.round((comp / total) * 100) : 0;
-
-  document.getElementById('m-ejes').textContent = `${loaded.length} / 10`;
-  document.getElementById('m-total').textContent = total;
-  document.getElementById('m-comp').textContent = comp;
-  document.getElementById('m-comp-pct').textContent = total > 0 ? `${Math.round(comp/total*100)}% del total` : '— % del total';
-  document.getElementById('m-avance').textContent = pct + '%';
-  document.getElementById('m-alerta').textContent = pct >= 70 ? 'En buen ritmo' : pct >= 40 ? 'Ritmo moderado' : loaded.length > 0 ? 'Requiere atención' : 'Sin datos aún';
-
-  const grid = document.getElementById('ejes-grid');
-  if (loaded.length === 0) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><i class="ti ti-chart-bar" aria-hidden="true"></i>Subí los archivos de los coordinadores para ver el avance por eje</div>';
-  } else {
-    grid.innerHTML = loaded.map(e => {
-      const s = state[e.key];
-      const p = s.total > 0 ? Math.round(s.completado / s.total * 100) : 0;
-      return `<div class="eje-card" style="border-left-color:${e.color}">
-        <div class="eje-card-top">
-          <div class="eje-name">${s.label}</div>
-          <div class="eje-pct" style="color:${e.color}">${p}%</div>
-        </div>
-        <div class="eje-bar-bg"><div class="eje-bar-fill" style="width:${p}%;background:${e.color}"></div></div>
-        <div class="eje-counts">
-          <div class="eje-count"><span>${s.completado}</span> completadas</div>
-          <div class="eje-count"><span>${s.proceso}</span> en proceso</div>
-          <div class="eje-count"><span>${s.pendiente}</span> pendientes</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  const barChart = document.getElementById('bar-chart');
-  if (loaded.length === 0) {
-    barChart.innerHTML = '<div class="empty-state"><i class="ti ti-upload" aria-hidden="true"></i>Sin datos cargados</div>';
-  } else {
-    const maxTotal = Math.max(...loaded.map(e => state[e.key].total), 1);
-    barChart.innerHTML = loaded.map(e => {
-      const s = state[e.key];
-      const w = Math.round((s.total / maxTotal) * 100);
-      const wc = Math.round((s.completado / maxTotal) * 100);
-      const wp = Math.round((s.proceso / maxTotal) * 100);
-      return `<div class="bar-row">
-        <div class="bar-label" title="${s.label}">${s.label}</div>
-        <div class="bar-track">
-          <div style="display:flex;height:100%">
-            <div style="width:${wc}%;background:#3B6D11;transition:width .4s"></div>
-            <div style="width:${wp}%;background:#185FA5;transition:width .4s"></div>
-            <div style="width:${Math.min(w - wc - wp, 100)}%;background:#D3D1C7;transition:width .4s"></div>
-          </div>
-        </div>
-        <div style="font-size:10px;color:var(--color-text-secondary);min-width:28px;text-align:right">${s.total}</div>
-      </div>`;
-    }).join('');
-  }
-
-  const allActs = loaded.flatMap(e => 
-    state[e.key].actividades.map(a => ({...a, ejLabel: state[e.key].label, ejColor: e.color}))
-  );
-  const semActs = allActs.filter(a => isThisWeek(a.fechaFin));
-  const tbody = document.getElementById('act-tbody');
-  
-  if (semActs.length === 0) {
-    const msg = loaded.length > 0 ? 'No hay actividades con fecha de cierre esta semana' : 'Sin actividades esta semana';
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar" aria-hidden="true"></i>${msg}</td></tr>`;
-  } else {
-    tbody.innerHTML = semActs.slice(0, 15).map(a => {
-      const tagClass = `tag-${a.estado}`;
-      const fechaStr = a.fechaFin ? new Date(a.fechaFin).toLocaleDateString('es-CO', {day:'2-digit',month:'short'}) : '—';
-      return `<tr>
-        <td><span style="color:${a.ejColor};font-size:10px;font-weight:500">${a.ejLabel}</span></td>
-        <td title="${a.nombre}">${a.nombre}</td>
-        <td>${fechaStr}</td>
-        <td>${a.responsable || '—'}</td>
-        <td><span class="status-tag ${tagClass}">${a.estado}</span></td>
-      </tr>`;
-    }).join('');
-  }
-}
-
-document.getElementById('file-input').addEventListener('change', function(e) {
-  const files = Array.from(e.target.files);
-  let processed = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      try {
-        const wb = XLSX.read(ev.target.result, {type:'array'});
-        const ok = processWorkbook(wb, file.name);
-        processed++;
-        if (processed === files.length) {
-  saveToFirebase();
-  render();
-}
-      } catch(err) { processed++; if (processed === files.length) {
-  saveToFirebase();
-  render();
-}
-    };
-    reader.readAsArrayBuffer(file);
-  });
-});
-
-const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.background = 'var(--color-background-secondary)'; });
-dz.addEventListener('dragleave', () => { dz.style.background = ''; });
-dz.addEventListener('drop', e => {
-  e.preventDefault(); dz.style.background = '';
-  const files = Array.from(e.dataTransfer.files).filter(f => f.name.match(/\.xlsx?$/i));
-  if (!files.length) return;
-  let processed = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const wb = XLSX.read(ev.target.result, {type:'array'});
-        processWorkbook(wb, file.name);
-        processed++;
-       if (processed === files.length) {
-  saveToFirebase();
-  render();
-}
-      } catch(err) { processed++; if (processed === files.length) {
-  saveToFirebase();
-  render();
-}
-    };
-    reader.readAsArrayBuffer(file);
-  });
-});
-
-const now = new Date();
-document.getElementById('fecha-actual').textContent = now.toLocaleDateString('es-CO', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-document.getElementById('semana-label').textContent = getWeekLabel(now);
-
-render();
+function openEditor(id){editing=id?activities.find(a=>a.id===id):null;$("editorTitle").textContent=editing?"Editar actividad":"Agregar actividad";$("fEje").value=editing?.eje||"fe";$("fEstado").value=editing?.estado||"pendiente";$("fNombre").value=editing?.nombre||"";$("fFecha").value=editing?.fechaFin||"";$("fResp").value=editing?.responsable||"";$("fObs").value=editing?.obs||"";$("editor").classList.add("open");$("fNombre").focus()}
+function closeEditor(){$("editor").classList.remove("open");editing=null}
+async function saveActivity(){const nombre=$("fNombre").value.trim();if(!nombre){$("fNombre").focus();return}const a={id:editing?.id||nextId++,eje:$("fEje").value,estado:$("fEstado").value,nombre,fechaFin:$("fFecha").value,responsable:$("fResp").value.trim(),obs:$("fObs").value.trim()};try{await writeOne(a);closeEditor()}catch(e){alert("No se pudo guardar. Revisa las reglas de Firebase.")}}
+async function deleteActivity(id){if(!confirm("¿Eliminar esta actividad para todos?"))return;try{await removeOne(id)}catch(e){alert("No se pudo eliminar. Revisa las reglas de Firebase.")}}
+function sheetActivities(sheet,name){const eje=detect(name);if(!eje)return[];const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:""});let h=rows.findIndex(r=>r.some(c=>clean(c).includes("actividad")||clean(c).includes("accion")));if(h<0)return[];return rows.slice(h+1).map(r=>({eje,nombre:String(r[1]||r[0]||"").trim(),fechaFin:dateISO(r[4]||r[3]),responsable:String(r[5]||r[4]||"").trim(),estado:status(r[7]||r[6]),obs:String(r[8]||"").trim()})).filter(a=>a.nombre&&a.nombre.length>2&&!clean(a.nombre).includes("total registrada"))}
+async function importFiles(files){try{for(const file of files){const wb=XLSX.read(await file.arrayBuffer(),{type:"array"});const byEje={};wb.SheetNames.forEach(n=>{if(!["INSTRUCCIONES","RESUMEN GENERAL"].includes(n)){const rows=sheetActivities(wb.Sheets[n],n);if(rows.length)byEje[rows[0].eje]=rows}});for(const [eje,rows] of Object.entries(byEje)){const updates={};activities.filter(a=>a.eje===eje).forEach(a=>updates[a.id]=null);rows.forEach(a=>{const id=nextId++;updates[id]={...a,id}});await activitiesRef.update(updates)}}catch(e){console.error(e);alert("No se pudo importar el Excel. Revisa el formato y la consola.")}}
+$("add").onclick=()=>openEditor();$("cancel").onclick=closeEditor;$("save").onclick=saveActivity;$("editor").onclick=e=>{if(e.target.id==="editor")closeEditor()};document.onkeydown=e=>{if(e.key==="Escape")closeEditor()};["from","to","search"].forEach(id=>$(id).oninput=render);$("clear").onclick=()=>{$("from").value="";$("to").value="";$("search").value="";render()};
+$("theme").onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark"};
+$("drop").onclick=()=>$("file").click();$("file").onchange=e=>{if(e.target.files.length)importFiles([...e.target.files]);e.target.value=""};$("drop").ondragover=e=>{e.preventDefault();$("drop").style.borderColor="var(--accent)"};$("drop").ondragleave=()=>$("drop").style.borderColor="";$("drop").ondrop=e=>{e.preventDefault();$("drop").style.borderColor="";const f=[...e.dataTransfer.files].filter(x=>/\.xlsx?$/i.test(x.name));if(f.length)importFiles(f)};
+activitiesRef.on("value",snap=>{const data=snap.val()||{};activities=Array.isArray(data)?data.filter(Boolean):Object.values(data);nextId=Math.max(Date.now(),...activities.map(a=>Number(a.id)||0)+1);setConnection("ok","Sincronizado");render()},err=>{console.error(err);setConnection("err","Error de conexión")});
+["fEje"].forEach(id=>$(id).innerHTML=EJES.map(e=>`<option value="${e.key}">${e.label}</option>`).join("") );render();
 </script>
+</body>
+</html>
