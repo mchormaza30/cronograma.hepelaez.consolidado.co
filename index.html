@@ -338,7 +338,7 @@ const EJES=[
 const EJE_KW={fe:['fe','feconvoz'],jovenes:['joven','juventud','juntos creamos'],goprende:['goprende'],formacion:['formacion','formación','liderazgo'],despensa:['despensa','gestiones'],fundacion:['fundacion','fundación','yoestoy']};
 const SEM2='2° sem. 2026';
 
-let allActs=[
+/*let allActs=[
   {id:1,eje:'fe',nombre:'Diálogos ciudadanos Cali',fechaFin:'2026-04-17',responsable:'Raúl Escobar, Janet Burbano',estado:'completado',obs:'106 pastores asistieron'},
   {id:2,eje:'fe',nombre:'Diálogos ciudadanos municipios del Valle',fechaFin:'2026-11-30',responsable:'Raúl, Janet, Yuly',estado:'proceso',obs:'Se visitó Roldanillo'},
   {id:3,eje:'fe',nombre:'Evento día del niño Comuna 15',fechaFin:'2026-05-09',responsable:'Raúl, Yuly',estado:'completado',obs:''},
@@ -403,7 +403,69 @@ let allActs=[
 
 let nextId=61;
 let activeFilter='all';
-let editingId=null;
+let editingId=null;*/
+  let allActs = [
+  // FE: 9
+  {id:1,eje:'fe',nombre:'Diálogos ciudadanos Cali',fechaFin:'2026-04-17',responsable:'Raúl Escobar, Janet Burbano',estado:'completado',obs:'106 pastores asistieron'},
+  {id:2,eje:'fe',nombre:'Diálogos ciudadanos municipios del Valle',fechaFin:'2026-11-30',responsable:'Raúl, Janet, Yuly',estado:'proceso',obs:'Se visitó Roldanillo'},
+  {id:3,eje:'fe',nombre:'Evento día del niño Comuna 15',fechaFin:'2026-05-09',responsable:'Raúl, Yuly',estado:'completado',obs:''},
+  {id:4,eje:'fe',nombre:'Taller Escuela de Padres (C.10,13,14,15,16)',fechaFin:'2026-06-30',responsable:'Janet, Raúl, Yuly',estado:'pendiente',obs:'Consultar con operador'},
+  {id:5,eje:'fe',nombre:'Acercamiento pastores',fechaFin:'2026-07-16',responsable:'Raúl, Yuly',estado:'pendiente',obs:'Priorizar comunas con potencial electoral. Agenda mensual pendiente por parte de Janet.'},
+  {id:6,eje:'fe',nombre:'Despensa móvil en Iglesias',fechaFin:'2026-09-06',responsable:'Raúl, Yuly, Flavio',estado:'pendiente',obs:'Iglesia El Shaddai y Alianza Familiar.'},
+  {id:7,eje:'fe',nombre:'Festival Góspel - Festival de la Familia',fechaFin:'2026-09-18',responsable:'Raúl, Yuly, Ma. Victoria',estado:'pendiente',obs:'Invitación a pastores'},
+  {id:8,eje:'fe',nombre:'Conferencia Jhon Stankov',fechaFin:'2026-10-02',responsable:'Raúl, Yuly',estado:'proceso',obs:'Consultar con Henry'},
+  {id:9,eje:'fe',nombre:'Foro Conferencia: Leader Impact',fechaFin:'2026-11-14',responsable:'Raúl, Yuly, Janet',estado:'proceso',obs:'Zarzal, Sevilla'},
+
+  // JÓVENES: 10
+  {id:10,eje:'jovenes',nombre:'Conversatorio Construye tu Futuro',fechaFin:'2026-05-15',responsable:'Valentina Paredes, Jhoan',estado:'completado',obs:'Eje educación'},
+  {id:11,eje:'jovenes',nombre:'Grupo WhatsApp (85 asistentes)',fechaFin:'2026-06-30',responsable:'Valentina Paredes, Jhoan',estado:'completado',obs:'Eje educación'},
+  {id:12,eje:'jovenes',nombre:'Encuesta de satisfacción',fechaFin:'2026-06-30',responsable:'Valentina Paredes, Jhoan',estado:'completado',obs:'Eje educación'},
+  {id:13,eje:'jovenes',nombre:'Curso de Inglés para jóvenes en la Fundación',fechaFin:'2026-07-30',responsable:'Juan Pablo, Luis Serna',estado:'pendiente',obs:'Eje Sostenibilidad'},
+  {id:14,eje:'jovenes',nombre:'Llamar contactos VIP (43) YAWA',fechaFin:'2026-07-31',responsable:'Valentina Paredes, Jhoan',estado:'pendiente',obs:'Eje educación'},
+  {id:15,eje:'jovenes',nombre:'Labor Social Manos de Libertad',fechaFin:'2026-08-01',responsable:'Tatiana Henao',estado:'pendiente',obs:'Esperando agenda del concejal. Coordinar visita y hablar con Elena Pérez.'},
+  {id:16,eje:'jovenes',nombre:'Celebración día de la juventud y Gran Despensa comuna 16',fechaFin:'2026-08-16',responsable:'Juan Carlos Briñez',estado:'pendiente',obs:'Torneo de fútbol femenino y masculino con apoyo de las comunas 13, 15 y 16. Pendiente definir sitio.'},
+  {id:17,eje:'jovenes',nombre:'Jornada salud y bienestar',fechaFin:'2026-09-30',responsable:'Cristihan y Laura',estado:'pendiente',obs:'Actividades Sociales en los colegios.'},
+  {id:18,eje:'jovenes',nombre:'Cine comunitario',fechaFin:'2026-10-30',responsable:'Cristihan y Laura',estado:'pendiente',obs:'Actividades Sociales'},
+  {id:19,eje:'jovenes',nombre:'Celebración día de los niños',fechaFin:'2026-12-30',responsable:'Cristihan y Laura',estado:'pendiente',obs:'Actividades Sociales'},
+
+  // GOPRENDE: 2
+  {id:20,eje:'goprende',nombre:'Activa Tu Poder Digital',fechaFin:'2026-06-03',responsable:'Andrés Bustamante',estado:'completado',obs:''},
+  {id:21,eje:'goprende',nombre:'GOPRENDE OCTUBRE',fechaFin:'2026-10-28',responsable:'Andrés Bustamante',estado:'pendiente',obs:''},
+
+  // FORMACIÓN: 4
+  {id:22,eje:'formacion',nombre:'Constitución Política y Mecanismos',fechaFin:'2026-06-20',responsable:'Andrés Bustamante',estado:'pendiente',obs:'Para Juntas de Acción Comunal. Reprogramar.'},
+  {id:23,eje:'formacion',nombre:'Contacto líderes vía telefónica',fechaFin:'2026-06-26',responsable:'Ángel Leudo',estado:'pendiente',obs:'Reprogramar con Ángel Leudo.'},
+  {id:24,eje:'formacion',nombre:'Reunión bienvenida y motivación',fechaFin:'2026-06-27',responsable:'Henry Peláez',estado:'completado',obs:''},
+  {id:25,eje:'formacion',nombre:'Capacitación Liderazgo',fechaFin:'2026-07-01',responsable:'Por definir',estado:'completado',obs:''},
+
+  // DESPENSA: 15
+  {id:26,eje:'despensa',nombre:'Picnic Literario (Cali Interculturalidad)',fechaFin:'2026-05-31',responsable:'Raúl y Yuly',estado:'completado',obs:'Reunión de cultores en la Fundación'},
+  {id:27,eje:'despensa',nombre:'Selección y capacitación de líderes',fechaFin:'2026-05-31',responsable:'Flavio Cabezas',estado:'completado',obs:'Fase 1'},
+  {id:28,eje:'despensa',nombre:'Apertura formal de la primera despensa',fechaFin:'2026-05-31',responsable:'Flavio Cabezas',estado:'completado',obs:'Fase 1'},
+  {id:29,eje:'despensa',nombre:'Brigadas',fechaFin:'2026-06-30',responsable:'Flavio Cabezas',estado:'cancelado',obs:'Estabilización'},
+  {id:30,eje:'despensa',nombre:'Despensa C.6 Floralia',fechaFin:'2026-07-04',responsable:'Flavio Cabezas',estado:'completado',obs:''},
+  {id:31,eje:'despensa',nombre:'Cafés con el Concejal',fechaFin:'2026-07-31',responsable:'Flavio Cabezas',estado:'pendiente',obs:'Emprendedores'},
+  {id:32,eje:'despensa',nombre:'Apertura nueva despensa comuna 13',fechaFin:'2026-08-01',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+  {id:33,eje:'despensa',nombre:'Apertura nueva despensa comuna 15',fechaFin:'2026-08-15',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+  {id:34,eje:'despensa',nombre:'Olla Comunitaria (C.13 Poblado 2)',fechaFin:'2026-09-05',responsable:'Flavio Cabezas',estado:'pendiente',obs:'Olla comunitaria y bingo'},
+  {id:35,eje:'despensa',nombre:'Brigada Oportunidades Comuna 14, Bienestar para todos',fechaFin:'2026-09-11',responsable:'Flavio Cabezas',estado:'pendiente',obs:'Estandarización'},
+  {id:36,eje:'despensa',nombre:'Brigada Jurídica Comuna 6',fechaFin:'2026-09-19',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+  {id:37,eje:'despensa',nombre:'Despensa Móvil comuna 6, Paso del Comercio',fechaFin:'2026-10-03',responsable:'Flavio Cabezas',estado:'pendiente',obs:'Fidelización'},
+  {id:38,eje:'despensa',nombre:'Despensa móvil, Iglesia Asamblea de Dios Comuna 16',fechaFin:'2026-11-01',responsable:'Flavio Cabezas',estado:'pendiente',obs:'Visibilización'},
+  {id:39,eje:'despensa',nombre:'Olla comunitaria comuna 13 - Carolina',fechaFin:'2026-11-07',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+  {id:40,eje:'despensa',nombre:'Jornada de bienestar comuna 15',fechaFin:'2026-11-21',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+  {id:41,eje:'despensa',nombre:'Jornada de Bienestar - brigada jurídica comuna 6',fechaFin:'2026-11-28',responsable:'Flavio Cabezas',estado:'pendiente',obs:''},
+
+  // FUNDACIÓN: 4
+  {id:42,eje:'fundacion',nombre:'Voces de Paz',fechaFin:'2026-07-11',responsable:'María Victoria Escarria',estado:'completado',obs:'Boulevar del Oriente'},
+  {id:43,eje:'fundacion',nombre:'Festival de la Familia',fechaFin:'2026-07-18',responsable:'Diana Bolaños',estado:'proceso',obs:'Canchas Panamericanas'},
+  {id:44,eje:'fundacion',nombre:'Vacaciones Recreativas (C.10,13,14,15,16)',fechaFin:'2026-07-31',responsable:'Diana Bolaños',estado:'proceso',obs:'Niños para inscripción'},
+  {id:45,eje:'fundacion',nombre:'Festival Góspel - Festival de la Familia',fechaFin:'2026-09-18',responsable:'Raúl, Yuly, Ma. Victoria',estado:'pendiente',obs:'Invitación a pastores'}
+];
+
+let nextId = 46;
+let activeFilter = 'all';
+let editingId = null;
 
 function getEjeCfg(k){return EJES.find(e=>e.key===k);}
 function fmtDate(ds){if(!ds)return`<span class="fecha-dim">${SEM2}</span>`;const d=new Date(ds+'T00:00:00');if(isNaN(d))return`<span class="fecha-dim">${SEM2}</span>`;return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});}
